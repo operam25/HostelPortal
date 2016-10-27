@@ -1,0 +1,115 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/z_waste_gray</item>
+        <item name="android:actionMenuTextColor">@color/z_waste_white</item>
+    </style>
+
+    <style name="AppThemeAlternate" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">#45A80C</item>
+        <item name="android:actionMenuTextColor">@color/z_waste_white</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppThemeAlternate.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="ToolbarTheme" parent="AppTheme">
+        <!-- android:textColorPrimary is the  color of the title text
+             in the Toolbar, in the Theme.AppCompat theme:  -->
+        <item name="android:textColorPrimary">@color/z_waste_white</item>
+
+
+        <!-- android:textColorPrimaryInverse is the  color of the title
+             text in the Toolbar, in the Theme.AppCompat.Light theme:  -->
+        <!-- <item name="android:textColorPrimaryInverse">@color/abc_primary_text_material_light</item> -->
+
+        <!-- android:actionMenuTextColor is the color of the text of
+              action (menu) items in the Toolbar, at least in the
+              Theme.AppCompat theme.
+              For some reason, they already get the textColorPrimary
+              when running on API 21, but not on older versions of
+              Android, so this is only necessary to support older
+              Android versions.-->
+        <item name="actionMenuTextColor">@color/z_waste_white</item>
+        <!-- android:textColorSecondary is the color of the menu
+             overflow icon (three vertical dots) -->
+        <item name="android:textColorSecondary">@color/z_waste_white</item>
+        <item name="android:textColor">@color/z_waste_white</item>
+        <item name="android:textColorPrimaryInverse">@color/z_waste_white</item>
+        <item name="android:textColorSecondaryInverse">@color/z_waste_white</item>
+        <item name="android:textColorTertiary">@color/z_waste_white</item>
+        <item name="android:textColorTertiaryInverse">@color/z_waste_white</item>
+        <item name="android:autoCompleteTextViewStyle">@style/AutoCompleteTextViewLight</item>
+        <item name="android:textColorHint">@color/z_waste_white</item>
+        <item name="android:textColorHintInverse">@color/z_waste_white</item>
+        <item name="android:editTextColor">@color/z_waste_white</item>
+        <item name="android:background">@color/colorPrimaryDark</item>
+        <item name="android:textColorAlertDialogListItem">@color/z_waste_white</item>
+        <item name="android:textColorHighlight">@color/z_waste_white</item>
+        <!-- Required for pre-Lollipop. -->
+        <item name="overlapAnchor">false</item>
+        <item name="android:dropDownVerticalOffset">-4.0dip</item>
+        <!-- This would set the toolbar's background color,
+              but setting this also changes the popup menu's background,
+              even if we define popupTheme for our <Toolbar> -->
+        <!-- <item name="android:background">@color/color_primary</item> -->
+    </style>
+
+    <style name="AutoCompleteTextViewLight" parent="@android:style/Widget.AutoCompleteTextView">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+
+    <!-- SmartEx Styles -->
+
+    <style name="Button_theme" parent="android:Widget.Holo.Light.Button">
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_marginRight">20dp</item>
+        <item name="android:layout_marginLeft">20dp</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/z_waste_white</item>
+    </style>
+
+    <style name="Button_theme_gray" parent="android:Widget.Holo.Light.Button">
+        <item name="android:textColor">@color/z_waste_white</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+
+    <style name="connection_image">
+        <item name="android:layout_width">40dp</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:scaleType">fitXY</item>
+    </style>
+
+    <style name="AutofocusTheme" parent="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" />
+
+    <style name="Theme.AppCompat.Light.NoActionBar.FullScreen" parent="@style/Theme.AppCompat.Light">
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:background">@color/z_waste_white</item>
+    </style>
+
+</resources>

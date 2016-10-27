@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#FFFFFF</color>
+    <color name="colorPrimaryDark">#0b5cc9</color>
+    <color name="colorBaseAccent">#45A80C</color> <!--- 424242 -->
+    <color name="green_overlay">#50689F38</color>
+    <color name="selection_color">#FFFFFF</color><!--- red 400 -->
+    <color name="iron">#393939</color>
+    <color name="blackOverlay">#30000000</color>
+    <color name="base_color">#f1f2f4</color>
+    <color name="base_color_alt">#f1f2f4</color>
+    <color name="text_blue">#324f79</color>
+
+
+    <!-- ZeroWaste Colors-->
+    <color name="z_waste_gray">#5F6266</color>
+    <color name="z_waste_green">#45A80C</color>
+    <color name="z_waste_white">#FFFFFF</color>
+    <color name="progress_color">#9CCC65</color>4
+    <color name="gray_light">#BDBDBD</color>
+
+    <!-- Question Card Colors -->
+    <color name="card_bg">#f1f2f4</color>
+    <color name="text_color_main">#212121</color>
+    <color name="text_color_secondary">#4c5365</color>
+    <color name="text_color_alternate">#f5a671</color>
+
+
+
+    <color name="google_button_color">#c04f44</color>
+    <color name="wm">#f16e20</color>
+    <color name="fridge">#f4ee41</color>
+    <color name="user_back">#EF5350</color>
+    <color name="ac">#45a80c</color>
+    <color name="phone">#0b5cc9</color>
+    <color name="card_back">#acd6b4</color>
+
+
+    <!-- SmartEx colors -->
+
+    <color name="light_green_button">#45A80C</color>
+    <color name="pressed_green_button">#80B545</color>
+    <color name="focused_green_button">#c6c7c7</color>
+    <color name="text_color">#FFFFFF</color>
+    <color name ="text_color_general">#262f3e</color>
+    <color name="ligh_green_background">#E9F2CF</color>
+    <color name="pressed_gray_button">#dadbdc</color>
+    <color name="border_shadow">#d0d1d2</color>
+    <color name="status_bar_color">#348704</color>
+
+
+</resources>

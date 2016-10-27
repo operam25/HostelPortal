@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:gravity="center"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/primary_text_light"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Upload pictures related to complain for faster action"
+        android:id="@+id/textView7"
+        android:gravity="center"
+        android:padding="10dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_below="@+id/textView7"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="10dp"
+        android:id="@+id/imageLayout"
+        android:layout_marginTop="20dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                >
+
+                <ImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:id="@+id/image1"
+                    android:layout_alignParentLeft="true"
+                    android:background="@color/gray_light"
+                    />
+                <ImageButton
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:src="@drawable/ic_imageaddbtn"
+                    android:id="@+id/imageaddbtn1"
+                    />
+
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                >
+
+                <ImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_alignParentLeft="true"
+                    android:id="@+id/image2"
+                    android:background="@color/gray_light"
+                    />
+                <ImageButton
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:src="@drawable/ic_imageaddbtn"
+                    android:id="@+id/imageaddbtn2"
+                    />
+
+            </RelativeLayout>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
+            >
+
+            <RelativeLayout
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                >
+
+                <ImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:id="@+id/image3"
+                    android:layout_alignParentLeft="true"
+                    android:background="@color/gray_light"
+                    />
+                <ImageButton
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:src="@drawable/ic_imageaddbtn"
+                    android:id="@+id/imageaddbtn3"
+                    />
+
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                >
+
+                <ImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_alignParentLeft="true"
+                    android:id="@+id/image4"
+                    android:background="@color/gray_light"
+                    />
+                <ImageButton
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:src="@drawable/ic_imageaddbtn"
+                    android:id="@+id/imageaddbtn4"
+                    />
+
+            </RelativeLayout>
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

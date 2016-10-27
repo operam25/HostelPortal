@@ -1,0 +1,50 @@
+<resources>
+
+    <string-array name="camera_choices">
+        <item>Choose Picture</item>
+        <item>Click Picture</item>
+    </string-array>
+
+    <string-array name="spinnerItems">
+        <item>Select type of complain...</item>
+        <item>Mess</item>
+        <item>Electrical</item>
+        <item>Sanitary</item>
+        <item>Internet</item>
+        <item>Social</item>
+        <item>TV Room</item>
+        <item>Water Cooler</item>
+    </string-array>
+
+    <string-array name="spinnerItems1">
+        <item>Select department....</item>
+        <item>Administration</item>
+        <item>Computer Centre</item>
+        <item>Hostel  Wardens and Hostels</item>
+        <item>Computer Science and  Engineering</item>
+        <item>Electrical Engineering</item>
+        <item>Electronics and Communication Engineering</item>
+        <item>Electronics and Instrumentation Engineering</item>
+        <item>Mechanical Engineering</item>
+        <item>Petroleum Engineering</item>
+        <item>Applied Geology</item>
+    </string-array>
+
+    <string-array name="spinnerItems2">
+        <item>Select type....</item>
+        <item>General Administration</item>
+        <item>Academic Administration</item>
+        <item>Essential Services</item>
+    </string-array>
+
+    <string-array name="spinnerItems3">
+        <item>Select Member....</item>
+        <item>Mr. XXXX XXXXX</item>
+        <item>Mrs. XXXXXX XXXXXXXX</item>
+        <item>Ms. XXXXX XXXXXXXX</item>
+        <item>Mr. XXXX XXXXX</item>
+        <item>Mrs. XXXXXX XXXXXXXX</item>
+        <item>Ms. XXXXX XXXXXXXX</item>
+    </string-array>
+
+</resources>

@@ -1,0 +1,401 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/base_color_alt"
+    android:fitsSystemWindows="true"
+    android:animateLayoutChanges="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginBottom="40dp"
+        android:id="@+id/mainLoginLayout"
+        >
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            app:cardCornerRadius="5dp"
+            >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:gravity="center"
+                android:text="@string/app_name"
+                android:textStyle="bold"
+                android:textSize="35sp"
+                android:textColor="@color/z_waste_green"
+                android:textAppearance="?android:textAppearanceLarge"
+                />
+
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            app:cardCornerRadius="5dp"
+            android:id="@+id/logInCard"
+
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Login"
+                    android:gravity="center"
+                    android:textColor="@color/phone"
+                    android:textAppearance="?android:textAppearanceLarge"
+                    android:textSize="40sp"
+                    />
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/ZWidWrapper"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    >
+                    <EditText
+                        android:id="@+id/ZWidLogin"
+                        android:inputType="text"
+                        android:fontFamily="sans-serif"
+                        android:hint="Admission Number"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp" />
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/passwordWrapper"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    >
+                    <EditText
+                        android:id="@+id/ZWidPasscodeLogin"
+                        android:inputType="textPassword"
+                        android:fontFamily="sans-serif"
+                        android:hint="Password"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp" />
+                </android.support.design.widget.TextInputLayout>
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:layout_margin="20dp"
+                    android:text="Enter"
+                    android:textColor="@color/z_waste_white"
+                    android:background="@color/phone"
+                    android:id="@+id/logInBtn"
+                    />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="10dp"
+                    android:gravity="center"
+                    >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="Don't have an account?"
+                        android:padding="2dp"
+                        />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="Register Here"
+                        android:padding="2dp"
+                        android:textColor="@color/phone"
+                        android:clickable="true"
+                        android:id="@+id/switchToSignUp"
+                        />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            app:cardCornerRadius="5dp"
+            android:id="@+id/signUpCard"
+            >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:orientation="vertical"
+                    android:id="@+id/signUpLayout"
+                    >
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Sign Up"
+                        android:gravity="center"
+                        android:textColor="@color/phone"
+                        android:textAppearance="?android:textAppearanceLarge"
+                        android:textSize="40sp"
+                        />
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/nameWrapper"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        >
+                        <EditText
+                            android:id="@+id/nameSignUp"
+                            android:inputType="textPersonName"
+                            android:fontFamily="sans-serif"
+                            android:hint="Name"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp" />
+                    </android.support.design.widget.TextInputLayout>
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/numberWrapper"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        >
+                        <EditText
+                            android:id="@+id/numberSignUp"
+                            android:inputType="number"
+                            android:fontFamily="sans-serif"
+                            android:maxLength="10"
+                            android:hint="Mobile Number"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp" />
+                    </android.support.design.widget.TextInputLayout>
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/businessWrapper"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        >
+                        <EditText
+                            android:id="@+id/businessSignUp"
+                            android:inputType="text"
+                            android:fontFamily="sans-serif"
+                            android:hint="Admission Number"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp" />
+                    </android.support.design.widget.TextInputLayout>
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/mailWrapper"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        >
+                        <EditText
+                            android:id="@+id/mailSignUp"
+                            android:inputType="textEmailAddress"
+                            android:fontFamily="sans-serif"
+                            android:hint="Email"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp" />
+                    </android.support.design.widget.TextInputLayout>
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/passwordSignUpWrapper"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        >
+                        <EditText
+                            android:id="@+id/PasscodeSignUp"
+                            android:inputType="textPassword"
+                            android:fontFamily="sans-serif"
+                            android:hint="Password"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp" />
+                    </android.support.design.widget.TextInputLayout>
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/confirmPasswordWrapper"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        >
+                        <EditText
+                            android:id="@+id/confirmPasswordSignUp"
+                            android:inputType="textPassword"
+                            android:fontFamily="sans-serif"
+                            android:hint="Confirm Password"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp" />
+                    </android.support.design.widget.TextInputLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="10dp"
+                        android:gravity="center"
+                        >
+
+                        <CheckBox
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/checkboxSignUp"
+                            android:checked="false"
+                            />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:gravity="center"
+                            >
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="By signing up, you agree to our"
+                                android:padding="2dp"
+                                />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Terms and Conditions"
+                                android:textColor="@color/phone"
+                                android:clickable="true"
+                                android:id="@+id/tandc_redirect"
+                                />
+
+
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="10dp"
+                        android:layout_margin="10dp"
+                        android:text="Enter"
+                        android:textColor="@color/z_waste_white"
+                        android:background="@color/phone"
+                        android:id="@+id/signUpBtn"
+                        />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="10dp"
+                        android:gravity="center"
+                        >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="Already have an account?"
+                            android:padding="2dp"
+                            />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="Log in here"
+                            android:padding="2dp"
+                            android:textColor="@color/phone"
+                            android:clickable="true"
+                            android:id="@+id/switchToLogin"
+                            />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            app:cardCornerRadius="5dp"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="5dp"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="For further details, visit :"
+                    android:padding="2dp"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="www.ismdhanbad.ac.in"
+                    android:padding="2dp"
+                    android:clickable="true"
+                    android:textColor="@color/phone"
+                    android:id="@+id/redirectWeb"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="10sp"
+                    android:text="Copyright © Indian School of Mines  All Rights Reserved."
+                    android:padding="2dp"
+                    />
+
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+
+    </LinearLayout>
+
+</ScrollView>
