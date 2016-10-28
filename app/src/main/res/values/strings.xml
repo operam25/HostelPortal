@@ -3,8 +3,8 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="userName">HostelPortal</string>
-    <string name="apiKey"></string>
-    <string name="base_url">http://10.0.3.2/Dashboard/HostelPortal/</string>
+    <string name="apiKey">gta114tarun</string>
+    <string name="base_url">http://10.0.3.2/HostelPortal/</string>
     <!-- font Strings -->
     <string name="font_name_noto">NotoSans-Regular</string>
     <string name="font_name_noto_bold">NotoSans-Bold</string>

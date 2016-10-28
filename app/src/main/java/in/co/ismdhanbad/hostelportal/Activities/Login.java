@@ -1,6 +1,8 @@
 package in.co.ismdhanbad.hostelportal.Activities;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -36,6 +38,8 @@ public class Login extends AppCompatActivity
     private Button LoginBtn;
     private Button SignUpBtn;
     private boolean doubleBackToExitPressedOnce = false;
+    private SharedPreferences preferences;
+    private SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +48,9 @@ public class Login extends AppCompatActivity
         getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
         );
+
+        preferences = getApplicationContext().getSharedPreferences("MyPref", Context.MODE_PRIVATE);
+        editor = preferences.edit();
 
         login = (CardView) findViewById(R.id.logInCard);
         SignUp = (CardView) findViewById(R.id.signUpCard);
@@ -233,6 +240,18 @@ public class Login extends AppCompatActivity
                         case "login":
                             status = object.getString("status");
                             if(status.toLowerCase().equals("success")){
+                                JSONObject msg = object.getJSONObject("msg");
+                                String name = msg.getString("name");
+                                String eMail = msg.getString("email");
+                                String admissionNumber = msg.getString("admissionnumber");
+                                String contactNumber = msg.getString("contactnumber");
+//                              Log.d("shello",eMail);
+                                editor.putString("name",name);
+                                editor.putString("eMail",eMail);
+                                editor.putString("admissionNumber",admissionNumber);
+                                editor.putString("contactNumber",contactNumber);
+                                editor.commit();
+//                                Log.d("name",preferences.getString("name",""));
                                 Intent intent = new Intent(Login.this,MainActivity.class);
                                 startActivity(intent);
                                 finish();
@@ -245,34 +264,6 @@ public class Login extends AppCompatActivity
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-//
-//                if(status.toLowerCase().equals("success")){
-//
-//                    if(!object.getString("msg").equals("Mobile Number or Password Invalid")) {
-//
-//                        Intent i = getIntent();
-//                        setResult(1,i);
-//                        finish();
-//                    }else {
-//
-//                        Toast.makeText(Login.this, "Mobile Number or Password Invalid", Toast.LENGTH_SHORT).show();
-//                        if(progress!=null){
-//                            progress.dismiss();
-//                        }
-//
-//                    }
-//
-//                }else {
-//                    Log.d("response op tesht",response);
-//                    Toast.makeText(Login.this, "Something went wrong.\nPlease try again", Toast.LENGTH_SHORT).show();
-//                    if(progress!=null){
-//                        progress.dismiss();
-//                    }
-//
-//                }
-//
-//            } catch (JSONException e) {
-//                e.printStackTrace();
             }
         }
 
