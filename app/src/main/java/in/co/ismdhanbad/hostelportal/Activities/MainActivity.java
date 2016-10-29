@@ -7,6 +7,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,6 +23,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,14 +34,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import net.gotev.uploadservice.MultipartUploadRequest;
 import net.gotev.uploadservice.UploadNotificationConfig;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -72,6 +80,7 @@ public class MainActivity extends AppCompatActivity
     Uri mFileuri;
     private ImageButton imageButton;
     private CircleImageView imageView1;
+    private Bitmap decodedByte;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -172,13 +181,9 @@ public class MainActivity extends AppCompatActivity
         imageView1 = (CircleImageView) view.findViewById(R.id.profilePic1);
         String uri = preferences.getString("userImage","");
         imageButton = (ImageButton) view.findViewById(R.id.imageaddbtn1);
-        if(uri != "") {
+        if(decodedByte != null) {
             imageButton.setVisibility(View.GONE);
-            Picasso.with(MainActivity.this)
-                    .load(uri)
-                    .noFade()
-                    .placeholder(R.drawable.avatar)
-                    .into(imageView1);
+            imageView1.setImageBitmap(decodedByte);
         }else {
             imageButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -243,7 +248,7 @@ public class MainActivity extends AppCompatActivity
             case CLICK_PHOTO_REQUEST:
                 if (resultCode == RESULT_OK) {
                     String deviceName = Build.DEVICE;
-                    uploadMultipart(mFileuri);
+                    imageResize();
                 } else if (resultCode == RESULT_CANCELED) {
                     String deviceName = Build.DEVICE;
                     // user cancelled Image capture
@@ -262,7 +267,7 @@ public class MainActivity extends AppCompatActivity
             case PICK_PHOTO_REQUEST:
                 if (resultCode == RESULT_OK) {
                     mFileuri = data.getData();
-                    uploadMultipart();
+                    imageResize();
                     String deviceName = Build.DEVICE;
                 } else if (resultCode == RESULT_CANCELED) {
                     String deviceName = Build.DEVICE;
@@ -281,17 +286,13 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    public void uploadMultipart(Uri fileUri) {
+    public void uploadMultipart(Uri uri) {
         try {
             String uploadId = UUID.randomUUID().toString();
 
             String url = getResources().getString(R.string.base_url) + "saveimage.php" ;
 
-            String path = fileUri.getPath();
-
-            imageView1.setImageURI(mFileuri);
-            imageView.setImageURI(mFileuri);
-            imageButton.setVisibility(View.GONE);
+            String path = getPath(uri);
 
             String imageUrl = getResources().getString(R.string.base_url) + "imagebase/" + admnNumber;
             editor.putString("userImage",imageUrl);
@@ -313,36 +314,36 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    public void uploadMultipart() {
+    protected void imageResize() {
+
         try {
-            String uploadId = UUID.randomUUID().toString();
+            InputStream input = this.getContentResolver().openInputStream(mFileuri);
+            Bitmap bm = BitmapFactory.decodeStream(input);
 
-            String url = getResources().getString(R.string.base_url) + "saveimage.php" ;
+            Bitmap resized = Bitmap.createScaledBitmap(bm, 800, 800, true);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            resized.compress(Bitmap.CompressFormat.JPEG, 30, baos); //bm is the bitmap object
+            Log.d("image size", baos.size() + "");
+            byte[] byteArray = baos.toByteArray();
+            String encodedImage = Base64.encodeToString(byteArray, Base64.DEFAULT);
+            encodedImages = encodedImage;
+            drawImage(encodedImage);
 
-            String path = getPath(mFileuri);
-
-            imageView1.setImageURI(mFileuri);
-            imageView.setImageURI(mFileuri);
-            imageButton.setVisibility(View.GONE);
-
-            String imageUrl = getResources().getString(R.string.base_url) + "imagebase/" + admnNumber;
-            editor.putString("userImage",imageUrl);
-            editor.apply();
-
-            Log.d("path",path);
-
-            new MultipartUploadRequest(this, uploadId, url)
-                    .addFileToUpload(path,"image") //Adding file
-                    .addParameter("name",admnNumber) //Adding text parameter to the request
-                    .addParameter("username",getResources().getString(R.string.userName))
-                    .addParameter("apikey",getResources().getString(R.string.apiKey))
-                    .setNotificationConfig(new UploadNotificationConfig())
-                    .setMaxRetries(2)
-                    .startUpload(); //Starting the upload
-
-        } catch (Exception exc) {
-            Toast.makeText(this, exc.getMessage(), Toast.LENGTH_SHORT).show();
         }
+        catch(Exception e){
+            Log.e("error pic ", e +"");
+            Toast.makeText(MainActivity.this, "didn't get the picture", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    protected void drawImage(String image){
+        byte[] decodedString = Base64.decode(image, Base64.DEFAULT);
+        decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+        String path = MediaStore.Images.Media.insertImage(MainActivity.this.getContentResolver(), decodedByte, "Title", null);
+        imageView.setImageBitmap(decodedByte);
+        imageView1.setImageBitmap(decodedByte);
+        imageButton.setVisibility(View.GONE);
+        uploadMultipart(Uri.parse(path));
     }
 
 
@@ -458,6 +459,93 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    protected void setNotice(JSONArray msg) throws JSONException {
+        JSONObject jsonObject = msg.getJSONObject(0);
+        TextView tv = (TextView) findViewById(R.id.timeStampNotice1);
+        final String time = jsonObject.getString("time");
+        final String header = jsonObject.getString("header");
+        final String details = jsonObject.getString("details");
+        final String notifier = jsonObject.getString("notifier");
+        if (tv != null) {
+            tv.setText("Dated - " + time);
+        }
+        tv = (TextView) findViewById(R.id.headerNotice1);
+        if (tv != null) {
+            tv.setText(header);
+        }
+        tv = (TextView) findViewById(R.id.detailsNotice1);
+        if (tv != null) {
+            tv.setText(details);
+        }
+        tv = (TextView) findViewById(R.id.notifierNotice1);
+        if (tv != null) {
+            tv.setText("Posted by - " + notifier);
+        }
+        LinearLayout nll = (LinearLayout) findViewById(R.id.noticeLayout1);
+        if (nll != null) {
+            nll.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                    builder.setTitle(header);
+                    builder.setMessage(details + "\n\nBy - " + notifier + "\nDated - " + time);
+                    builder.setCancelable(true);
+                    builder.setNegativeButton("OK",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    if (which == Dialog.BUTTON_NEGATIVE)
+                                        dialog.dismiss();
+                                }
+                            });
+                    AlertDialog alertDialog = builder.create();
+                    alertDialog.show();
+                }
+            });
+        }
+        jsonObject = msg.getJSONObject(1);
+        final String time1 = jsonObject.getString("time");
+        final String header1 = jsonObject.getString("header");
+        final String details1 = jsonObject.getString("details");
+        final String notifier1 = jsonObject.getString("notifier");
+        tv = (TextView) findViewById(R.id.timeStampNotice2);
+        if (tv != null) {
+            tv.setText("Dated - " + time1);
+        }
+        tv = (TextView) findViewById(R.id.headerNotice2);
+        if (tv != null) {
+            tv.setText(header1);
+        }
+        tv = (TextView) findViewById(R.id.detailsNotice2);
+        if (tv != null) {
+            tv.setText(details1);
+        }
+        tv = (TextView) findViewById(R.id.notifierNotice2);
+        if (tv != null) {
+            tv.setText("Posted by - " + notifier1);
+        }
+        nll = (LinearLayout) findViewById(R.id.noticeLayout2);
+        if (nll != null) {
+            nll.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                    builder.setTitle(header1);
+                    builder.setMessage(details1 + "\n\nBy - " + notifier1 + "\nDated - " + time1);
+                    builder.setCancelable(true);
+                    builder.setNegativeButton("OK",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    if (which == Dialog.BUTTON_NEGATIVE)
+                                        dialog.dismiss();
+                                }
+                            });
+                    AlertDialog alertDialog = builder.create();
+                    alertDialog.show();
+                }
+            });
+        }
+    }
+
 
     @Override
     public void webCallResponse(String response, String flag) {
@@ -465,16 +553,48 @@ public class MainActivity extends AppCompatActivity
             Log.d("response",response);
             try {
                 JSONObject jsonObject = new JSONObject(response);
-                String status = jsonObject.getString("status");
-                if(status.toLowerCase().contains("success")){
-                    String imageUrl = getResources().getString(R.string.base_url) + "imagebase/" + jsonObject.getString("msg");
-                    editor.putString("userImage",imageUrl);
-                    editor.apply();
-                    Picasso.with(MainActivity.this)
-                            .load(imageUrl)
-                            .noFade()
-                            .placeholder(R.drawable.avatar)
-                            .into(imageView);
+                switch (flag){
+                    case "loadimage":
+                        String url = getResources().getString(R.string.base_url) + "notification.php";
+                        String[] name = {"page"};
+                        String[] value = {"0"};
+                        new HttpApiCall(MainActivity.this,url,name,value,"notice");
+                        String status = jsonObject.getString("status");
+                        if(status.toLowerCase().contains("success")){
+                            String imageUrl = getResources().getString(R.string.base_url) + "imagebase/" + jsonObject.getString("msg");
+                            editor.putString("userImage",imageUrl);
+                            editor.apply();
+                            Picasso.with(MainActivity.this)
+                                    .load(imageUrl)
+                                    .noFade()
+                                    .placeholder(R.drawable.avatar)
+                                    .into(new Target() {
+                                        @Override
+                                        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                                            decodedByte = bitmap;
+                                            imageView.setImageBitmap(decodedByte);
+                                        }
+
+                                        @Override
+                                        public void onBitmapFailed(Drawable errorDrawable) {
+
+                                        }
+
+                                        @Override
+                                        public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+                                        }
+                                    });
+                        }
+                        break;
+
+                    case "notice":
+                        status = jsonObject.getString("status");
+                        if(status.toLowerCase().contains("success")){
+                            JSONArray msg = jsonObject.getJSONArray("msg");
+                            setNotice(msg);
+                        }
+
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
