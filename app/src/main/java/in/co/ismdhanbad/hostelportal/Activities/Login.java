@@ -40,6 +40,7 @@ public class Login extends AppCompatActivity
     private boolean doubleBackToExitPressedOnce = false;
     private SharedPreferences preferences;
     private SharedPreferences.Editor editor;
+    private Boolean isLoggedIn = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -202,6 +203,8 @@ public class Login extends AppCompatActivity
     @Override
     public void onBackPressed() {
         if (doubleBackToExitPressedOnce) {
+            Intent i = new Intent();
+            setResult(4, i);
             super.onBackPressed();
             return;
         }
@@ -240,6 +243,7 @@ public class Login extends AppCompatActivity
                         case "login":
                             status = object.getString("status");
                             if(status.toLowerCase().equals("success")){
+                                isLoggedIn = true;
                                 JSONObject msg = object.getJSONObject("msg");
                                 String name = msg.getString("name");
                                 String eMail = msg.getString("email");
@@ -250,10 +254,11 @@ public class Login extends AppCompatActivity
                                 editor.putString("eMail",eMail);
                                 editor.putString("admissionNumber",admissionNumber);
                                 editor.putString("contactNumber",contactNumber);
+                                editor.putBoolean("isLoggedIn",isLoggedIn);
                                 editor.commit();
 //                                Log.d("name",preferences.getString("name",""));
-                                Intent intent = new Intent(Login.this,MainActivity.class);
-                                startActivity(intent);
+                                Intent i = getIntent();
+                                setResult(1,i);
                                 finish();
                                 Toast.makeText(Login.this,"Login Successful",Toast.LENGTH_SHORT).show();
                             }else {
@@ -268,5 +273,6 @@ public class Login extends AppCompatActivity
         }
 
     }
+
 
 }
