@@ -9,7 +9,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.LinearLayout;
+
+import com.paging.gridview.PagingGridView;
 
 import in.co.ismdhanbad.hostelportal.R;
 
@@ -42,7 +43,7 @@ public class ComplainList extends AppCompatActivity {
     }
 
     public void setNotification(){
-        LinearLayout ll = (LinearLayout) findViewById(R.id.listLayout);
+       PagingGridView ll = (PagingGridView) findViewById(R.id.listLayout);
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.content_complain, null);
 

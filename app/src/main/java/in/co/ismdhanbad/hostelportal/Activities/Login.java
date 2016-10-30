@@ -1,5 +1,6 @@
 package in.co.ismdhanbad.hostelportal.Activities;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -41,6 +42,7 @@ public class Login extends AppCompatActivity
     private SharedPreferences preferences;
     private SharedPreferences.Editor editor;
     private Boolean isLoggedIn = false;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +57,11 @@ public class Login extends AppCompatActivity
 
         login = (CardView) findViewById(R.id.logInCard);
         SignUp = (CardView) findViewById(R.id.signUpCard);
+
+        progressDialog = new ProgressDialog(Login.this);
+        progressDialog.setMessage("loading...");
+        progressDialog.setCancelable(true);
+        progressDialog.setCanceledOnTouchOutside(false);
 
         login.setVisibility(View.VISIBLE);
         SignUp.setVisibility(View.GONE);
@@ -127,6 +134,7 @@ public class Login extends AppCompatActivity
                 //Log.d("value", String.valueOf(values));
                 String Url = getResources().getString(R.string.base_url) + "login.php" ;
                 new HttpApiCall(Login.this, Url, names, values, "login");
+                progressDialog.show();
             }else {
                 passcodeLogin.setError("Password consists of atleast 8 characters");
             }
@@ -168,6 +176,8 @@ public class Login extends AppCompatActivity
                         if(passcode.getText().toString().equals(passcodeAgain.getText().toString())){
 
                             if(checkBoxSignUp.isChecked() == true){
+
+                                progressDialog.show();
 
                                 String[] names = {"name","email","password","admissionnumber","contactnumber"};
                                 String[] values = {name.getText().toString(),mail.getText().toString(),passcode.getText().toString(),admnno.getText().toString(),number.getText().toString()};
@@ -234,6 +244,7 @@ public class Login extends AppCompatActivity
                             String status = object.getString("status");
                             if(status.toLowerCase().equals("success")){
                                 switchToLogin.performClick();
+                                progressDialog.dismiss();
                                 Toast.makeText(Login.this,"Registration Successful",Toast.LENGTH_SHORT).show();
 
                             }else {
@@ -256,6 +267,8 @@ public class Login extends AppCompatActivity
                                 editor.putString("contactNumber",contactNumber);
                                 editor.putBoolean("isLoggedIn",isLoggedIn);
                                 editor.commit();
+                                if(progressDialog.isShowing())
+                                    progressDialog.dismiss();
 //                                Log.d("name",preferences.getString("name",""));
                                 Intent i = getIntent();
                                 setResult(1,i);

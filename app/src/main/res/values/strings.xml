@@ -2,9 +2,12 @@
     <string name="app_name">HostelPortal</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="userName">HostelPortal</string>
+    <!--<string name="userName">HostelPortal</string>-->
+    <!--<string name="apiKey">gta114tarun</string>-->
+    <!--<string name="base_url">http://192.168.1.101/HostelPortal/</string>-->
+    <string name="userName">id120756_hostelportal</string>
     <string name="apiKey">gta114tarun</string>
-    <string name="base_url">http://192.168.1.101/HostelPortal/</string>
+    <string name="base_url">https://hostelportal.000webhostapp.com/</string>
     <!-- font Strings -->
     <string name="font_name_noto">NotoSans-Regular</string>
     <string name="font_name_noto_bold">NotoSans-Bold</string>

@@ -5,7 +5,9 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -29,9 +31,17 @@ import android.view.animation.RotateAnimation;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
+
+import net.gotev.uploadservice.MultipartUploadRequest;
+import net.gotev.uploadservice.UploadNotificationConfig;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -39,13 +49,15 @@ import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.UUID;
 
 import in.co.ismdhanbad.hostelportal.R;
 
 /**
  * Created by khandelwal on 20/08/16.
  */
-public class RegisterComplain extends AppCompatActivity {
+public class RegisterComplain extends AppCompatActivity
+        implements HttpApiCall.CallResponseListener {
 
     private boolean isAnonymous = false;
     private CheckBox cb;
@@ -60,6 +72,7 @@ public class RegisterComplain extends AppCompatActivity {
     private ImageButton imagebtn4;
     boolean[] images = {false,false,false,false};
     String[] encodedImages;
+    private Bitmap[] decByte = {null,null,null,null};
     int thisImage;
     public static final int PICK_PHOTO_REQUEST = 2;
     public static final int CLICK_PHOTO_REQUEST = 3;
@@ -68,7 +81,16 @@ public class RegisterComplain extends AppCompatActivity {
     ProgressDialog progress;
     Uri mFileuri;
     int count = 0;
+    private Uri[] uris = {null,null,null,null};
     private Button btn1;
+    private SharedPreferences preferences;
+    private SharedPreferences.Editor editor;
+    private String admnNumber;
+    private EditText editText;
+    private Spinner spinner;
+    private ProgressDialog progressDialog;
+    private String header;
+    private String details;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +110,16 @@ public class RegisterComplain extends AppCompatActivity {
         getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
         );
+
+        preferences = getApplicationContext().getSharedPreferences("MyPref",MODE_PRIVATE);
+        editor = preferences.edit();
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("loading...");
+        progressDialog.setCancelable(true);
+        progressDialog.setCanceledOnTouchOutside(false);
+
+        admnNumber = preferences.getString("admissionNumber","");
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             final String[] permissions = new String[2];
@@ -113,22 +145,26 @@ public class RegisterComplain extends AppCompatActivity {
             }
         });
 
+
+        editText = (EditText) findViewById(R.id.detailsComplain);
+        spinner = (Spinner) findViewById(R.id.spinnerComplain);
+
         btn = (Button) findViewById(R.id.complainBtn);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createAlert();
+                header = spinner.getSelectedItem().toString();
+                details = editText.getText().toString();
+                if(spinner.getSelectedItemId() > 0){
+                    if(details.length()>0)
+                        createAlert();
+                    else
+                        editText.setError("");
+                }else{
+                    Toast.makeText(RegisterComplain.this,"Select type of complain",Toast.LENGTH_SHORT).show();
+                }
             }
         });
-
-        btn1 = (Button) findViewById(R.id.uploadBtn);
-        btn1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                createAlertUpload();
-            }
-        });
-
 
         encodedImages = new String[4];
     }
@@ -157,6 +193,23 @@ public class RegisterComplain extends AppCompatActivity {
         anim.setDuration(0);
         anim.setFillEnabled(true);
         anim.setFillAfter(true);
+
+        if(decByte[0]!=null){
+            image1.setImageBitmap(decByte[0]);
+            imagebtn1.setImageDrawable(getResources().getDrawable(R.drawable.ic_imagerembtn));
+        }
+        if(decByte[1]!=null){
+            image2.setImageBitmap(decByte[1]);
+            imagebtn2.setImageDrawable(getResources().getDrawable(R.drawable.ic_imagerembtn));
+        }
+        if(decByte[2]!=null){
+            image3.setImageBitmap(decByte[2]);
+            imagebtn3.setImageDrawable(getResources().getDrawable(R.drawable.ic_imagerembtn));
+        }
+        if(decByte[3]!=null){
+            image4.setImageBitmap(decByte[3]);
+            imagebtn4.setImageDrawable(getResources().getDrawable(R.drawable.ic_imagerembtn));
+        }
 
         imagebtn1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -229,7 +282,7 @@ public class RegisterComplain extends AppCompatActivity {
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         if (which == Dialog.BUTTON_NEGATIVE)
-                            dialog.dismiss();
+                            finish();
                     }
                 });
         AlertDialog alertDialog = builder.create();
@@ -264,6 +317,51 @@ public class RegisterComplain extends AppCompatActivity {
         count--;
     }
 
+    public void uploadMultipart(Uri uri) {
+        try {
+            String uploadId = UUID.randomUUID().toString();
+
+            String url = getResources().getString(R.string.base_url) + "registercomplain.php" ;
+
+            String path = getPath(uri);
+
+            String imageUrl = getResources().getString(R.string.base_url) + "complainimage/" + admnNumber;
+            editor.putString("userImage",imageUrl);
+            editor.apply();
+
+            Log.d("path",path);
+
+            new MultipartUploadRequest(this, uploadId, url)
+                    .addFileToUpload(path,"image") //Adding file
+                    .addParameter("name",admnNumber) //Adding text parameter to the request
+                    .addParameter("username",getResources().getString(R.string.userName))
+                    .addParameter("apikey",getResources().getString(R.string.apiKey))
+                    .setNotificationConfig(new UploadNotificationConfig())
+                    .setMaxRetries(2)
+                    .startUpload(); //Starting the upload
+
+        } catch (Exception exc) {
+            Toast.makeText(this, exc.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public String getPath(Uri uri) {
+        Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+        cursor.moveToFirst();
+        String document_id = cursor.getString(0);
+        document_id = document_id.substring(document_id.lastIndexOf(":") + 1);
+        cursor.close();
+
+        cursor = getContentResolver().query(
+                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                null, MediaStore.Images.Media._ID + " = ? ", new String[]{document_id}, null);
+        cursor.moveToFirst();
+        String path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
+        cursor.close();
+
+        return path;
+    }
+
     protected void createAlert(){
         final AlertDialog.Builder builder = new AlertDialog.Builder(RegisterComplain.this);
         builder.setTitle("Confirmation");
@@ -274,7 +372,12 @@ public class RegisterComplain extends AppCompatActivity {
         builder.setCancelable(true).setPositiveButton("Submit",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        createSuccessAlert();
+                        progressDialog.show();
+                        String url = getResources().getString(R.string.base_url) + "registercomplain.php";
+                        String[] name = {"admissionnumber","isanonymous","header","details"};
+                        String[] value = {admnNumber,""+isAnonymous,header,details};
+                        new HttpApiCall(RegisterComplain.this,url,name,value,"register");
+                        dialog.dismiss();
                     }
                 });
         builder.setNegativeButton("Not Now",
@@ -288,18 +391,21 @@ public class RegisterComplain extends AppCompatActivity {
         alertDialog.show();
     }
 
-    protected void createSuccessAlert(){
+    protected void createSuccessAlert(String complainId){
         final AlertDialog.Builder builder = new AlertDialog.Builder(RegisterComplain.this);
         builder.setTitle("Success");
-        builder.setMessage("Your complain has been registered successfully with complain ID - XXXXXXXXXX .");
+        builder.setMessage("Your complain has been registered successfully with complain ID - " + complainId + ".");
         builder.setCancelable(true).setPositiveButton("OK",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        finish();
+                        dialog.dismiss();
+                        createAlertUpload();
                     }
                 });
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
+        if(progressDialog.isShowing())
+            progressDialog.dismiss();
     }
 
     @Override
@@ -372,7 +478,6 @@ public class RegisterComplain extends AppCompatActivity {
             String encodedImage = Base64.encodeToString(byteArray, Base64.DEFAULT);
             encodedImages[thisImage] = encodedImage;
             drawImage(encodedImage);
-//            imageUpload(encodedImage);
 
         }
         catch(Exception e){
@@ -384,20 +489,29 @@ public class RegisterComplain extends AppCompatActivity {
     protected void drawImage(String image){
         byte[] decodedString = Base64.decode(image, Base64.DEFAULT);
         Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+        String path = MediaStore.Images.Media.insertImage(RegisterComplain.this.getContentResolver(), decodedByte, "Title", null);
         switch(thisImage){
             case 0:
+                decByte[0] = decodedByte;
+                uris[0] = Uri.parse(path);
                 image1.setImageBitmap(decodedByte);
                 imagebtn1.setImageDrawable(getResources().getDrawable(R.drawable.ic_imagerembtn));
                 break;
             case 1:
+                decByte[1] = decodedByte;
+                uris[1] = Uri.parse(path);
                 image2.setImageBitmap(decodedByte);
                 imagebtn2.setImageDrawable(getResources().getDrawable(R.drawable.ic_imagerembtn));
                 break;
             case 2:
+                decByte[2] = decodedByte;
+                uris[2] = Uri.parse(path);
                 image3.setImageBitmap(decodedByte);
                 imagebtn3.setImageDrawable(getResources().getDrawable(R.drawable.ic_imagerembtn));
                 break;
             case 3:
+                decByte[3] = decodedByte;
+                uris[3] = Uri.parse(path);
                 image4.setImageBitmap(decodedByte);
                 imagebtn4.setImageDrawable(getResources().getDrawable(R.drawable.ic_imagerembtn));
                 break;
@@ -464,9 +578,35 @@ public class RegisterComplain extends AppCompatActivity {
         return mediaFile;
     }
 
+
     @Override
     protected void onResume() {
         super.onResume();
     }
 
+    @Override
+    public void webCallResponse(String response, String flag) {
+        if(response != null){
+            {
+                Log.d("response",response);
+                try {
+                    JSONObject object = new JSONObject(response);
+                    switch (flag) {
+                        case "register":
+                            String status = object.getString("status");
+                            if(status.toLowerCase().equals("success")){
+                                String complanId = object.getString("complainid");
+                                createSuccessAlert(complanId);
+
+                            }else {
+                                Toast.makeText(RegisterComplain.this, "Registration Unsuccessful\n" + status, Toast.LENGTH_SHORT).show();
+                            }
+                            break;
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 }

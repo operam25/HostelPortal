@@ -111,6 +111,11 @@ public class MainActivity extends AppCompatActivity
 
         isLoggedIn = preferences.getBoolean("isLoggedIn",false);
 
+        String urls = getResources().getString(R.string.base_url) + "notification.php";
+        String[] names = {"page"};
+        String[] values = {"0"};
+        new HttpApiCall(MainActivity.this,urls,names,values,"notice");
+
         if(!isLoggedIn) {
             Intent intent = new Intent(MainActivity.this, Login.class);
             startActivityForResult(intent, 1);
@@ -122,12 +127,6 @@ public class MainActivity extends AppCompatActivity
             admnNumber = preferences.getString("admissionNumber","");
             navHeaderCity.setText(preferences.getString("admissionNumber",""));
             imageView = (CircleImageView) header.findViewById(R.id.profilePic);
-            imageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    imageAlert();
-                }
-            });
             String[] name = {"admissionnumber"};
             String[] value = {admnNumber};
             String url = getResources().getString(R.string.base_url) + "loadimage.php";
@@ -175,16 +174,19 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    public void imageAlert(){
+    public void imageAlert(boolean flag1){
         final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
         View view = getLayoutInflater().inflate( R.layout.content_pic, null );
         imageView1 = (CircleImageView) view.findViewById(R.id.profilePic1);
         String uri = preferences.getString("userImage","");
         imageButton = (ImageButton) view.findViewById(R.id.imageaddbtn1);
-        if(decodedByte != null) {
+        Log.d("flag1",flag1+"");
+        if(flag1 || decodedByte != null) {
             imageButton.setVisibility(View.GONE);
             imageView1.setImageBitmap(decodedByte);
         }else {
+            imageButton.setVisibility(View.VISIBLE);
+            imageView1.setImageDrawable(getResources().getDrawable(R.drawable.avatar));
             imageButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -232,12 +234,6 @@ public class MainActivity extends AppCompatActivity
                         admnNumber = preferences.getString("admissionNumber","");
                         navHeaderCity.setText(admnNumber);
                         imageView = (CircleImageView) header.findViewById(R.id.profilePic);
-                        imageView.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                imageAlert();
-                            }
-                        });
                         String[] name = {"admissionnumber"};
                         String[] value = {admnNumber};
                         String url = getResources().getString(R.string.base_url) + "loadimage.php";
@@ -294,7 +290,7 @@ public class MainActivity extends AppCompatActivity
 
             String path = getPath(uri);
 
-            String imageUrl = getResources().getString(R.string.base_url) + "imagebase/" + admnNumber;
+            String imageUrl = getResources().getString(R.string.base_url)  + admnNumber;
             editor.putString("userImage",imageUrl);
             editor.apply();
 
@@ -555,13 +551,15 @@ public class MainActivity extends AppCompatActivity
                 JSONObject jsonObject = new JSONObject(response);
                 switch (flag){
                     case "loadimage":
-                        String url = getResources().getString(R.string.base_url) + "notification.php";
-                        String[] name = {"page"};
-                        String[] value = {"0"};
-                        new HttpApiCall(MainActivity.this,url,name,value,"notice");
                         String status = jsonObject.getString("status");
-                        if(status.toLowerCase().contains("success")){
-                            String imageUrl = getResources().getString(R.string.base_url) + "imagebase/" + jsonObject.getString("msg");
+                        if(status.toLowerCase().equals("success")){
+                            imageView.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    imageAlert(true);
+                                }
+                            });
+                            String imageUrl = getResources().getString(R.string.base_url)  + jsonObject.getString("msg");
                             editor.putString("userImage",imageUrl);
                             editor.apply();
                             Picasso.with(MainActivity.this)
@@ -572,6 +570,8 @@ public class MainActivity extends AppCompatActivity
                                         @Override
                                         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
                                             decodedByte = bitmap;
+                                            if(imageView1 != null)
+                                                imageView1.setImageBitmap(decodedByte);
                                             imageView.setImageBitmap(decodedByte);
                                         }
 
@@ -585,6 +585,13 @@ public class MainActivity extends AppCompatActivity
 
                                         }
                                     });
+                        }else {
+                            imageView.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    imageAlert(false);
+                                }
+                            });
                         }
                         break;
 
