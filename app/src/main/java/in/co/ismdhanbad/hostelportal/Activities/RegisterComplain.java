@@ -89,8 +89,8 @@ public class RegisterComplain extends AppCompatActivity
     private EditText editText;
     private Spinner spinner;
     private ProgressDialog progressDialog;
-    private String header;
-    private String details;
+    private String header = "";
+    private String details = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -599,6 +599,8 @@ public class RegisterComplain extends AppCompatActivity
                                 createSuccessAlert(complanId);
 
                             }else {
+                                if(progressDialog.isShowing())
+                                    progressDialog.dismiss();
                                 Toast.makeText(RegisterComplain.this, "Registration Unsuccessful\n" + status, Toast.LENGTH_SHORT).show();
                             }
                             break;

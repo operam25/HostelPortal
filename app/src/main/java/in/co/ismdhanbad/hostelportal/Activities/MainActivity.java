@@ -81,6 +81,7 @@ public class MainActivity extends AppCompatActivity
     private ImageButton imageButton;
     private CircleImageView imageView1;
     private Bitmap decodedByte;
+    private int countRetry = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -553,38 +554,11 @@ public class MainActivity extends AppCompatActivity
                     case "loadimage":
                         String status = jsonObject.getString("status");
                         if(status.toLowerCase().equals("success")){
-                            imageView.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    imageAlert(true);
-                                }
-                            });
                             String imageUrl = getResources().getString(R.string.base_url)  + jsonObject.getString("msg");
                             editor.putString("userImage",imageUrl);
                             editor.apply();
-                            Picasso.with(MainActivity.this)
-                                    .load(imageUrl)
-                                    .noFade()
-                                    .placeholder(R.drawable.avatar)
-                                    .into(new Target() {
-                                        @Override
-                                        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                                            decodedByte = bitmap;
-                                            if(imageView1 != null)
-                                                imageView1.setImageBitmap(decodedByte);
-                                            imageView.setImageBitmap(decodedByte);
-                                        }
+                            picassoloader(imageUrl);
 
-                                        @Override
-                                        public void onBitmapFailed(Drawable errorDrawable) {
-
-                                        }
-
-                                        @Override
-                                        public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-                                        }
-                                    });
                         }else {
                             imageView.setOnClickListener(new View.OnClickListener() {
                                 @Override
@@ -609,4 +583,51 @@ public class MainActivity extends AppCompatActivity
 
         }
     }
+
+    protected void picassoloader(final String imageUrl){
+        Picasso.with(MainActivity.this)
+                .load(imageUrl)
+                .noFade()
+                .placeholder(R.drawable.avatar)
+                .into(new Target() {
+                    @Override
+                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                        decodedByte = bitmap;
+                        if (imageView1 != null)
+                            imageView1.setImageBitmap(decodedByte);
+                        imageView.setImageBitmap(decodedByte);
+                        imageView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                imageAlert(true);
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onBitmapFailed(Drawable errorDrawable) {
+                        if(countRetry > 3) {
+                            Toast.makeText(MainActivity.this,"Failed to load the image. Retry manually by clicking on the icon.",Toast.LENGTH_SHORT).show();
+                            countRetry = 0;
+                            imageView.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    imageView.setOnClickListener(null);
+                                    picassoloader(imageUrl);
+                                }
+                            });
+                        }else {
+                            countRetry++;
+                            Toast.makeText(MainActivity.this, "Failed to load the image. Retrying...", Toast.LENGTH_SHORT).show();
+                            picassoloader(imageUrl);
+                        }
+                    }
+
+                    @Override
+                    public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+                    }
+                });
+    }
+
 }
